@@ -10,7 +10,7 @@ from supabase import create_client, Client
 load_dotenv()
 
 # --- HELPERS ---
-def get_clima(cidade: str = "São Paulo"):
+def get_clima(cidade: str = "Taboão da Serra"):
     weather_key = os.getenv("WEATHER_KEY")
     if not weather_key: return "agradável"
     url = f"http://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={weather_key}&units=metric&lang=pt_br"
