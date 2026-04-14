@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>OunceAI - Dashboard</title>
+</head>
+<body class="bg-zinc-950 text-white p-10">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-emerald-400 mb-8">🐆 Inventário OunceAI</h1>
+        
+        <form action="/inventory/criar" method="post" class="grid grid-cols-2 gap-4 bg-zinc-900 p-6 rounded-lg mb-10">
+            <input name="codigo" placeholder="Código de Barras" class="bg-zinc-800 p-2 rounded">
+            <input name="nome" placeholder="Nome" class="bg-zinc-800 p-2 rounded">
+            <input name="categoria" placeholder="Categoria" class="bg-zinc-800 p-2 rounded">
+            <input name="preco" placeholder="Preço (ex: 10,50)" class="bg-zinc-800 p-2 rounded">
+            <input name="peso" type="number" placeholder="Peso (g)" class="bg-zinc-800 p-2 rounded">
+            <input name="estoque" type="number" placeholder="Estoque Inicial" class="bg-zinc-800 p-2 rounded">
+            <button class="col-span-2 bg-emerald-500 text-black font-bold p-2 rounded hover:bg-emerald-400">Cadastrar Produto</button>
+        </form>
+
+        <table class="w-full text-left">
+            <thead>
+                <tr class="text-zinc-500 border-b border-zinc-800">
+                    <th class="p-2">ID</th><th class="p-2">Produto</th><th class="p-2">Preço</th><th class="p-2">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in produtos %}
+                <tr class="border-b border-zinc-900">
+                    <td class="p-2">{{ p.id }}</td>
+                    <td class="p-2 font-bold">{{ p.nome }} <span class="text-xs font-normal text-zinc-500">({{ p.categoria }})</span></td>
+                    <td class="p-2 text-emerald-400 text-sm">R$ {{ p.preco }}</td>
+                    <td class="p-2"><a href="/inventory/deletar/{{ p.id }}" class="text-red-500 hover:underline">Excluir</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
