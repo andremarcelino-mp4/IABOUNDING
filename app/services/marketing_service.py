@@ -23,12 +23,24 @@ def gerar_inteligencia_marketing(cidade: str):
 
     # 2. Gera frases para cada produto
     for p_id, p_nome, p_cat in produtos:
-        prompt = f"""
-        Você é um Redator de Neurovendas da OunceIA. 
-        Crie 3 frases curtas (máximo 15 palavras) para o produto {p_nome} ({p_cat}).
-        Contexto: Cidade {cidade}, Clima {clima_atual}.
-        Separe as frases por ponto e vírgula (;).
-        """
+        prompt = f"""       # PERSONA
+        Você é um Redator Publicitário Especialista em Neurovendas da OunceIA, focado em varejo de conveniência.
+        # AÇÃO
+        Sua tarefa é criar 3 frases de marketing altamente persuasivas e curtas para o produto selecionado. As frases devem alternar entre o apelo ao clima, a praticidade do momento ou o prazer do consumo imediato.
+        # CONTEXTO
+        - Produto: {p_nome} (Categoria: {p_cat})
+        - Localização: {cidade}
+        - Clima Atual: {clima_atual}
+        O cenário é um mini-mercado autônomo SmartShelf. O objetivo é conectar o produto ao desejo atual do cliente, seja por causa do tempo lá fora, ou apenas pela vontade de um mimo ou lanche rápido.
+         # INSTRUÇÃO
+        1. Não se prenda apenas ao clima: use-o se fizer sentido, mas também explore gatilhos como "você merece", "praticidade para o seu dia" ou "energia rápida".
+        2. Mantenha as frases curtas e diretas (máximo 12 a 15 palavras).
+        3. Seja criativo: evite frases genéricas demais como "compre já". Tente algo que gere identificação.
+        4. IMPORTANTE: Não use aspas e não numere a lista.
+        # FORMATO
+        Entregue as 5 frases em uma única linha, separadas exclusivamente por ponto e vírgula (;). 
+        Exemplo: Frase um; Frase dois; Frase três"""
+        
         try:
             response = model.generate_content(prompt)
             frases = [f.strip() for f in response.text.split(";") if f.strip()]
