@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>OunceAI - {% block title %}{% endblock %}</title>
+</head>
+<body class="bg-zinc-950 text-white">
+    <nav class="p-4 bg-zinc-900 border-b border-zinc-800 flex gap-6">
+        <a href="/inventory/dashboard" class="hover:text-emerald-400">📦 Estoque</a>
+        <a href="/chat/gepeteco" class="hover:text-emerald-400">🤖 Gepeteco</a>
+        <a href="/vision/monitor" class="hover:text-emerald-400">👁️ Visão</a>
+    </nav>
+    
+    <main class="p-8">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

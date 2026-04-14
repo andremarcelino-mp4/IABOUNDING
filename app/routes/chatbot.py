@@ -1,4 +1,4 @@
-# app/routes/chatbot.py
+
 from fastapi import APIRouter, Request, Form
 from fastapi.templating import Jinja2Templates
 from app.services.ai_engine import gerar_resposta_gepeteco

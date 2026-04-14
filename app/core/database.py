@@ -31,7 +31,7 @@ def _get_connection():
         sslmode=os.getenv("DB_SSLMODE", "require")
     )
 
-# --- MONGODB (AUDITORIA) ---
+# --- MONGODB  ---
 def get_mongo_client():
     return MongoClient(os.getenv("MONGO_URL"))
 
