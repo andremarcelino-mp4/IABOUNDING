@@ -1,9 +1,55 @@
 import cv2
+from pathlib import Path
+import torch
+import ultralytics.nn.tasks as ultratasks
 from ultralytics import YOLO
 import numpy as np
 
-# Carrega o modelo apenas uma vez quando o servidor inicia
-model = YOLO('models/modelv0.5.pt')
+
+def _patch_ultralytics_torch_safe_load():
+    from ultralytics.nn.tasks import temporary_modules, check_suffix, check_requirements
+    from ultralytics.utils.downloads import attempt_download_asset
+
+    def torch_safe_load(weight):
+        check_suffix(file=weight, suffix='.pt')
+        file = attempt_download_asset(weight)
+        try:
+            with temporary_modules(
+                {
+                    'ultralytics.yolo.utils': 'ultralytics.utils',
+                    'ultralytics.yolo.v8': 'ultralytics.models.yolo',
+                    'ultralytics.yolo.data': 'ultralytics.data',
+                }
+            ):
+                torch.serialization.add_safe_globals(
+                    [
+                        ultratasks.DetectionModel,
+                        torch.nn.modules.container.Sequential,
+                        torch.nn.modules.module.Module,
+                        torch.nn.parameter.Parameter,
+                    ]
+                )
+                return torch.load(file, map_location='cpu', weights_only=False), file
+        except ModuleNotFoundError as e:
+            if e.name == 'models':
+                raise e
+            check_requirements(e.name)
+            torch.serialization.add_safe_globals(
+                [
+                    ultratasks.DetectionModel,
+                    torch.nn.modules.container.Sequential,
+                    torch.nn.modules.module.Module,
+                    torch.nn.parameter.Parameter,
+                ]
+            )
+            return torch.load(file, map_location='cpu', weights_only=False), file
+
+    ultratasks.torch_safe_load = torch_safe_load
+
+
+_patch_ultralytics_torch_safe_load()
+model_path = Path(__file__).resolve().parent.parent / 'models' / 'modelv0.5.pt'
+model = YOLO(str(model_path))
 
 def gerar_frames_camera():
     """Captura a câmera, processa com YOLO e converte para streaming Web"""

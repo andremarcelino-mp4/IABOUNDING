@@ -21,15 +21,20 @@ class Settings(BaseSettings):
     MONGO_COLLECTION_NAME: str = "ofertas_ia"
 
     # --- SUPABASE API ---
-    SUPABASE_URL: str
-    SUPABASE_KEY: str
+    SUPABASE_PROJECT_REF: str | None = None
+    SUPABASE_URL: str | None = None
+    SUPABASE_KEY: str | None = None
 
     # --- AI & EXTERNAL APIS ---
     GROQ_API_KEY: str
     WEATHER_KEY: str = ""
 
     # Configuração para ler o arquivo .env automaticamente
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore"
+    )
 
 # Instância global para ser importada no projeto todo
 settings = Settings()
