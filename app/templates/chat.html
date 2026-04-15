@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OunceAI | Gepeteco</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 font-sans antialiased">
+    <main class="min-h-screen p-8 lg:px-20 lg:py-12">
+        <div class="max-w-4xl mx-auto space-y-8">
+            <header class="flex flex-col gap-4 pb-6 border-b border-zinc-800">
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <p class="text-emerald-500 uppercase text-sm tracking-widest">Assistente Inteligente</p>
+                        <h1 class="text-4xl font-bold">Gepeteco</h1>
+                    </div>
+                    <a href="/inventory/dashboard" class="inline-flex items-center gap-2 rounded-xl border border-zinc-700 px-4 py-3 text-sm hover:bg-zinc-800 transition">
+                        <i data-lucide="arrow-left"></i> Voltar ao Dashboard
+                    </a>
+                </div>
+                <p class="text-zinc-400">Converse com o assistente de IA para suporte em estoque, marketing e visão computacional.</p>
+            </header>
+
+            <section class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-lg shadow-black/20">
+                <form id="chat-form" class="space-y-4">
+                    <label class="block text-sm text-zinc-400">Digite sua pergunta para o Gepeteco</label>
+                    <textarea id="prompt" name="prompt" rows="4" required class="w-full rounded-2xl border border-zinc-700 bg-zinc-950 p-4 text-sm text-zinc-100 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"></textarea>
+                    <button type="submit" class="inline-flex items-center justify-center rounded-2xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-400">Enviar</button>
+                </form>
+            </section>
+
+            <section class="space-y-4">
+                <h2 class="text-xl font-semibold">Resposta do Gepeteco</h2>
+                <div id="response" class="min-h-[140px] rounded-3xl border border-zinc-800 bg-zinc-950 p-6 text-zinc-200"></div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        const form = document.getElementById('chat-form');
+        const responseBox = document.getElementById('response');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const prompt = document.getElementById('prompt').value.trim();
+            if (!prompt) return;
+            responseBox.textContent = 'Aguarde, gerando resposta...';
+
+            try {
+                const res = await fetch('/chat/perguntar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({ prompt })
+                });
+                const data = await res.json();
+                responseBox.textContent = data.resposta || 'Nenhuma resposta recebida.';
+            } catch (error) {
+                responseBox.textContent = 'Erro ao obter resposta. Verifique o servidor.';
+            }
+        });
+    </script>
+</body>
+</html>

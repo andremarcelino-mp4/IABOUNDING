@@ -15,8 +15,15 @@ async def listar_produtos_view(request: Request):
             cur.execute("SELECT id, nome, preco, estoque_sistema, categoria, codigo_de_barras FROM produtos ORDER BY id ASC")
             for r in cur.fetchall():
                 produtos.append({"id": r[0], "nome": r[1], "preco": r[2], "estoque": r[3], "categoria": r[4], "codigo": r[5]})
+
+    status_key = request.query_params.get("status")
+    mensagens = {
+        "ia_atualizada": "IA atualizada com sucesso!",
+        "erro_ia": "Erro ao atualizar a IA. Verifique as credenciais e tente novamente."
+    }
+    mensagem = mensagens.get(status_key)
     
-    return templates.TemplateResponse("dashboard.html", {"request": request, "produtos": produtos})
+    return templates.TemplateResponse("dashboard.html", {"request": request, "produtos": produtos, "mensagem": mensagem})
 
 @router.post("/criar")
 async def criar_produto_api(
